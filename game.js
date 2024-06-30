@@ -6,7 +6,6 @@ let level = 0;
 
 document.addEventListener('keydown', () => {
   if (!started) {
-    document.querySelector("#level-title").textContent = `Level ${level}`;
     start();
     started = true;
   }
@@ -31,6 +30,21 @@ function start() {
   nextSequence();
 }
 
-function nextSequence() {}
+function nextSequence() {
+  userClickedPattern = [];
+  level++;
+  document.querySelector("#level-title").textContent = `Level ${level}`;
+
+  const randomNumber = Math.floor(Math.random() * 4);
+  const randomChosenColor = buttonColors[randomNumber];
+  gamePattern.push(randomChosenColor);
+
+  const newColorIndex = gamePattern.length - 1;
+  const audio = new Audio(`sounds/${gamePattern[newColorIndex]}.mp3`);
+  audio.play();
+  const button = document.querySelector(`#${gamePattern[newColorIndex]}`);
+  button.classList.add('pressed');
+  setTimeout(() => button.classList.remove('pressed'), 100);
+}
 
 function checkAnswer() {}
