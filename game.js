@@ -4,6 +4,8 @@ let userClickedPattern = [];
 let started = false;
 let level = 0;
 
+document.querySelector("#level-title").textContent = "Press A Key to Start";
+
 document.addEventListener('keydown', () => {
   if (!started) {
     start();
@@ -19,7 +21,7 @@ document.querySelectorAll('.btn').forEach(button => {
     audio.play();
     button.classList.add('pressed');
     setTimeout(() => button.classList.remove('pressed'), 100);
-    checkAnswer();
+    checkAnswer(userClickedPattern.length - 1);
   });
 });
 
@@ -47,4 +49,28 @@ function nextSequence() {
   setTimeout(() => button.classList.remove('pressed'), 100);
 }
 
-function checkAnswer() {}
+function checkAnswer(currentLevel) {
+  if (userClickedPattern[currentLevel] === gamePattern[currentLevel]) {
+    if (userClickedPattern.length === gamePattern.length) {
+      setTimeout(() => nextSequence(), 1000);
+    }
+  } else {
+    const audio = new Audio(`sounds/wrong.mp3`);
+    audio.play();
+    document.querySelector('body').classList.add('game-over');
+    document.querySelector("#level-title").textContent = `Game Over, Press Any Key to Restart`;
+
+    setTimeout(() => {
+      document.querySelector('body').classList.remove('game-over');
+    }, 200);
+
+    reset();
+  }
+}
+
+function reset() {
+  level = 0;
+  gamePattern = [];
+  userClickedPattern = [];
+  started = false;
+}
